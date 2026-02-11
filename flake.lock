@@ -1,50 +1,5 @@
 {
   "nodes": {
-    "devenv-go": {
-      "inputs": {
-        "gomod2nix": "gomod2nix",
-        "nixpkgs": "nixpkgs",
-        "nixpkgs-master": "nixpkgs-master",
-        "utils": "utils"
-      },
-      "locked": {
-        "dir": "pkgs/alfa/devenv-go",
-        "lastModified": 1770569500,
-        "narHash": "sha256-1s9HgHsLklPw0Bzee1rJnvm/ZxCGINC+R8tev15pPS8=",
-        "owner": "friedenberg",
-        "repo": "eng",
-        "rev": "9067130be0a0c4e93195d939be4a56b7e44f5642",
-        "type": "github"
-      },
-      "original": {
-        "dir": "pkgs/alfa/devenv-go",
-        "owner": "friedenberg",
-        "repo": "eng",
-        "type": "github"
-      }
-    },
-    "devenv-shell": {
-      "inputs": {
-        "nixpkgs": "nixpkgs_2",
-        "nixpkgs-master": "nixpkgs-master_2",
-        "utils": "utils_2"
-      },
-      "locked": {
-        "dir": "pkgs/alfa/devenv-shell",
-        "lastModified": 1770569500,
-        "narHash": "sha256-1s9HgHsLklPw0Bzee1rJnvm/ZxCGINC+R8tev15pPS8=",
-        "owner": "friedenberg",
-        "repo": "eng",
-        "rev": "9067130be0a0c4e93195d939be4a56b7e44f5642",
-        "type": "github"
-      },
-      "original": {
-        "dir": "pkgs/alfa/devenv-shell",
-        "owner": "friedenberg",
-        "repo": "eng",
-        "type": "github"
-      }
-    },
     "flake-utils": {
       "inputs": {
         "systems": "systems"
@@ -63,20 +18,43 @@
         "type": "github"
       }
     },
+    "go": {
+      "inputs": {
+        "gomod2nix": "gomod2nix",
+        "nixpkgs": "nixpkgs",
+        "nixpkgs-master": "nixpkgs-master",
+        "utils": "utils"
+      },
+      "locked": {
+        "dir": "devenvs/go",
+        "lastModified": 1770817635,
+        "narHash": "sha256-V4X32boiQQW42rRR9bh1RuO6/JQF9nn2VlyXJT1tCzs=",
+        "owner": "friedenberg",
+        "repo": "eng",
+        "rev": "d6b1afb577ec35deca1cdc5be6a1776a3639df27",
+        "type": "github"
+      },
+      "original": {
+        "dir": "devenvs/go",
+        "owner": "friedenberg",
+        "repo": "eng",
+        "type": "github"
+      }
+    },
     "gomod2nix": {
       "inputs": {
         "flake-utils": "flake-utils",
         "nixpkgs": [
-          "devenv-go",
+          "go",
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1770482965,
-        "narHash": "sha256-jUVKV6ftuyyCmjCEMeWfxWlO/oW9J6VBjmMEf0PFr0w=",
+        "lastModified": 1770585520,
+        "narHash": "sha256-yBz9Ozd5Wb56i3e3cHZ8WcbzCQ9RlVaiW18qDYA/AzA=",
         "owner": "nix-community",
         "repo": "gomod2nix",
-        "rev": "1ca0f54dff6fba59d9980d631fbe2a072a73616a",
+        "rev": "1201ddd1279c35497754f016ef33d5e060f3da8d",
         "type": "github"
       },
       "original": {
@@ -135,17 +113,17 @@
     },
     "nixpkgs-master_3": {
       "locked": {
-        "lastModified": 1770652396,
-        "narHash": "sha256-X3z5NcIpnjVV60HYtWwekTLL2EuOtPwwEIFRJpsFL0Q=",
+        "lastModified": 1770522055,
+        "narHash": "sha256-03+UdWZAo150UdTZGG4xwSCTTT0GbxpSyGn9j4FBBH8=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "78b5d9438362f3a3417dad31df469509516c4f4f",
+        "rev": "b28c4999ed71543e71552ccfd0d7e68c581ba7e9",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "master",
         "repo": "nixpkgs",
+        "rev": "b28c4999ed71543e71552ccfd0d7e68c581ba7e9",
         "type": "github"
       }
     },
@@ -167,27 +145,49 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1770537093,
-        "narHash": "sha256-pF1quXG5wsgtyuPOHcLfYg/ft/QMr8NnX0i6tW2187s=",
+        "lastModified": 1770464364,
+        "narHash": "sha256-z5NJPSBwsLf/OfD8WTmh79tlSU8XgIbwmk6qB1/TFzY=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "fef9403a3e4d31b0a23f0bacebbec52c248fbb51",
+        "rev": "23d72dabcb3b12469f57b37170fcbc1789bd7457",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "nixpkgs-unstable",
         "repo": "nixpkgs",
+        "rev": "23d72dabcb3b12469f57b37170fcbc1789bd7457",
         "type": "github"
       }
     },
     "root": {
       "inputs": {
-        "devenv-go": "devenv-go",
-        "devenv-shell": "devenv-shell",
+        "go": "go",
+        "nixpkgs": "nixpkgs_2",
+        "nixpkgs-master": "nixpkgs-master_2",
+        "shell": "shell",
+        "utils": "utils_3"
+      }
+    },
+    "shell": {
+      "inputs": {
         "nixpkgs": "nixpkgs_3",
         "nixpkgs-master": "nixpkgs-master_3",
-        "utils": "utils_3"
+        "utils": "utils_2"
+      },
+      "locked": {
+        "dir": "devenvs/shell",
+        "lastModified": 1770817635,
+        "narHash": "sha256-V4X32boiQQW42rRR9bh1RuO6/JQF9nn2VlyXJT1tCzs=",
+        "owner": "friedenberg",
+        "repo": "eng",
+        "rev": "d6b1afb577ec35deca1cdc5be6a1776a3639df27",
+        "type": "github"
+      },
+      "original": {
+        "dir": "devenvs/shell",
+        "owner": "friedenberg",
+        "repo": "eng",
+        "type": "github"
       }
     },
     "systems": {
