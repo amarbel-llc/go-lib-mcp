@@ -22,7 +22,7 @@ This library handles the protocol details, letting you focus on implementing you
 ## Installation
 
 ```bash
-go get github.com/friedenberg/go-lib-mcp
+go get github.com/amarbel-llc/go-lib-mcp
 ```
 
 ## Quick Start
@@ -39,9 +39,9 @@ import (
     "log"
     "os"
 
-    "github.com/friedenberg/go-lib-mcp/protocol"
-    "github.com/friedenberg/go-lib-mcp/server"
-    "github.com/friedenberg/go-lib-mcp/transport"
+    "github.com/amarbel-llc/go-lib-mcp/protocol"
+    "github.com/amarbel-llc/go-lib-mcp/server"
+    "github.com/amarbel-llc/go-lib-mcp/transport"
 )
 
 func main() {
@@ -266,7 +266,7 @@ stream := jsonrpc.NewStream(reader, writer)
 The optional `executor` package helps manage subprocesses:
 
 ```go
-import "github.com/friedenberg/go-lib-mcp/executor/nix"
+import "github.com/amarbel-llc/go-lib-mcp/executor/nix"
 
 exec := nix.New()
 

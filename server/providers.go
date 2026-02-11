@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/friedenberg/go-lib-mcp/protocol"
+	"github.com/amarbel-llc/go-lib-mcp/protocol"
 )
 
 // ToolProvider is implemented by servers that provide tools.

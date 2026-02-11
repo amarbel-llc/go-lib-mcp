@@ -38,7 +38,7 @@
 
           meta = with pkgs.lib; {
             description = "MCP (Model Context Protocol) library for building MCP servers in Go";
-            homepage = "https://github.com/friedenberg/go-lib-mcp";
+            homepage = "https://github.com/amarbel-llc/go-lib-mcp";
             license = licenses.mit;
           };
         };

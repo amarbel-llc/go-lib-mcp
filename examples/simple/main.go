@@ -9,9 +9,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/friedenberg/go-lib-mcp/protocol"
-	"github.com/friedenberg/go-lib-mcp/server"
-	"github.com/friedenberg/go-lib-mcp/transport"
+	"github.com/amarbel-llc/go-lib-mcp/protocol"
+	"github.com/amarbel-llc/go-lib-mcp/server"
+	"github.com/amarbel-llc/go-lib-mcp/transport"
 )
 
 func main() {
