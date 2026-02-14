@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/amarbel-llc/go-lib-mcp/protocol"
+	"github.com/amarbel-llc/go-lib-mcp/purse"
 	"github.com/amarbel-llc/go-lib-mcp/server"
 	"github.com/amarbel-llc/go-lib-mcp/transport"
 )
@@ -42,11 +43,38 @@ func main() {
 		log.Fatalf("Failed to create server: %v", err)
 	}
 
+	// Generate purse-first mapping file
+	if os.Getenv("GENERATE_PURSE_MAPPING") != "" {
+		generatePurseMapping()
+		return
+	}
+
 	// Run server
 	log.Println("Starting MCP example server...")
 	if err := srv.Run(context.Background()); err != nil {
 		log.Fatalf("Server error: %v", err)
 	}
+}
+
+func generatePurseMapping() {
+	builder := purse.NewMappingBuilder("example-server")
+	builder.Replaces(purse.BuiltinRead).
+		ForExtensions(".go", ".py").
+		WithTool("lsp_hover", "getting type info or documentation").
+		WithTool("lsp_definition", "finding where a symbol is defined").
+		Because("Use LSP tools for reading code intelligently").
+		Replaces(purse.BuiltinGrep).
+		ForExtensions(".go", ".py").
+		WithTool("lsp_references", "finding all usages of a symbol").
+		Because("Use LSP references for semantic search")
+
+	mf := builder.Build()
+
+	if err := purse.WriteGlobal(mf); err != nil {
+		log.Fatalf("Failed to write purse-first mapping: %v", err)
+	}
+
+	log.Println("Wrote purse-first mapping file")
 }
 
 func registerTools(tools *server.ToolRegistry) {
