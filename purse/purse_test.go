@@ -139,6 +139,141 @@ func TestBuilderChaining(t *testing.T) {
 	}
 }
 
+func TestPluginBuilderBasic(t *testing.T) {
+	p := NewPluginBuilder("grit").
+		Command("grit").
+		StdioTransport().
+		Build()
+
+	if p.Name != "grit" {
+		t.Errorf("name = %q, want %q", p.Name, "grit")
+	}
+	if p.Type != "stdio" {
+		t.Errorf("type = %q, want %q", p.Type, "stdio")
+	}
+	if p.Command != "grit" {
+		t.Errorf("command = %q, want %q", p.Command, "grit")
+	}
+	if len(p.Args) != 0 {
+		t.Errorf("args len = %d, want 0", len(p.Args))
+	}
+	if len(p.Notifications) != 0 {
+		t.Errorf("notifications len = %d, want 0", len(p.Notifications))
+	}
+	if len(p.Mappings) != 0 {
+		t.Errorf("mappings len = %d, want 0", len(p.Mappings))
+	}
+}
+
+func TestPluginBuilderWithNotifications(t *testing.T) {
+	p := NewPluginBuilder("lux").
+		Command("lux", "mcp", "stdio").
+		OnPostToolUse(
+			HTTPPostAction{
+				PortEnv:      "LUX_PORT",
+				DefaultPort:  19419,
+				Path:         "/documents/open",
+				BodyTemplate: map[string]any{"uri": "file://{file_path}"},
+			},
+			&NotifyCondition{
+				HasFilePath:      true,
+				FilePathAbsolute: true,
+			},
+		).
+		OnStop(HTTPPostAction{
+			PortEnv:     "LUX_PORT",
+			DefaultPort: 19419,
+			Path:        "/documents/close-all",
+		}).
+		Build()
+
+	if p.Command != "lux" {
+		t.Errorf("command = %q, want %q", p.Command, "lux")
+	}
+	if len(p.Args) != 2 || p.Args[0] != "mcp" || p.Args[1] != "stdio" {
+		t.Errorf("args = %v, want [mcp stdio]", p.Args)
+	}
+	if len(p.Notifications) != 2 {
+		t.Fatalf("notifications len = %d, want 2", len(p.Notifications))
+	}
+	if p.Notifications[0].On != "post_tool_use" {
+		t.Errorf("notification[0].on = %q, want %q", p.Notifications[0].On, "post_tool_use")
+	}
+	if p.Notifications[0].When == nil {
+		t.Fatal("notification[0].when is nil, want non-nil")
+	}
+	if !p.Notifications[0].When.HasFilePath {
+		t.Error("notification[0].when.has_file_path = false, want true")
+	}
+	if p.Notifications[1].On != "stop" {
+		t.Errorf("notification[1].on = %q, want %q", p.Notifications[1].On, "stop")
+	}
+	if p.Notifications[1].When != nil {
+		t.Errorf("notification[1].when should be nil")
+	}
+}
+
+func TestPluginBuilderWithMappings(t *testing.T) {
+	b := NewPluginBuilder("lux").
+		Command("lux", "mcp", "stdio")
+
+	b.Mappings().
+		Replaces(BuiltinRead).
+		ForExtensions(".go", ".py").
+		WithTool("lsp_hover", "getting type info").
+		Because("Use LSP tools for reading").
+		Replaces(BuiltinGrep).
+		ForExtensions(".go").
+		WithTool("lsp_references", "finding usages").
+		Because("Use LSP for search")
+
+	p := b.Build()
+
+	if len(p.Mappings) != 2 {
+		t.Fatalf("mappings len = %d, want 2", len(p.Mappings))
+	}
+	// Sorted: Grep before Read
+	if p.Mappings[0].Replaces != BuiltinGrep {
+		t.Errorf("mappings[0].replaces = %q, want %q", p.Mappings[0].Replaces, BuiltinGrep)
+	}
+	if p.Mappings[1].Replaces != BuiltinRead {
+		t.Errorf("mappings[1].replaces = %q, want %q", p.Mappings[1].Replaces, BuiltinRead)
+	}
+}
+
+func TestPluginJSONRoundTrip(t *testing.T) {
+	p := NewPluginBuilder("test").
+		Command("test-cmd", "--flag").
+		OnStop(HTTPPostAction{Path: "/shutdown"}).
+		Build()
+
+	data, err := json.MarshalIndent(p, "", "  ")
+	if err != nil {
+		t.Fatalf("marshal: %v", err)
+	}
+
+	var got Plugin
+	if err := json.Unmarshal(data, &got); err != nil {
+		t.Fatalf("unmarshal: %v", err)
+	}
+
+	if got.Name != "test" {
+		t.Errorf("name = %q, want %q", got.Name, "test")
+	}
+	if got.Command != "test-cmd" {
+		t.Errorf("command = %q, want %q", got.Command, "test-cmd")
+	}
+	if len(got.Args) != 1 || got.Args[0] != "--flag" {
+		t.Errorf("args = %v, want [--flag]", got.Args)
+	}
+	if len(got.Notifications) != 1 {
+		t.Fatalf("notifications len = %d, want 1", len(got.Notifications))
+	}
+	if got.Notifications[0].On != "stop" {
+		t.Errorf("notification.on = %q, want %q", got.Notifications[0].On, "stop")
+	}
+}
+
 func TestBuilderWireFormat(t *testing.T) {
 	builder := NewMappingBuilder("my-server")
 	builder.Replaces(BuiltinRead).
