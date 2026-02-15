@@ -44,7 +44,7 @@ type ContentBlock struct {
 	Type string `json:"type"`
 
 	// Text is the text content (for type="text").
-	Text string `json:"text,omitempty"`
+	Text string `json:"text"`
 
 	// MimeType is the MIME type for non-text content.
 	MimeType string `json:"mimeType,omitempty"`
